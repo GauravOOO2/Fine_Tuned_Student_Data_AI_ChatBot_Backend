@@ -48,26 +48,31 @@ class PromptRequest(BaseModel):
 
 # Function to save chat messages to MongoDB
 async def save_chat_to_db(sender: str, text: str):
-    chat_message = {
-        "sender": sender,
-        "text": text,
-        "timestamp": datetime.utcnow()
-    }
-    await chat_collection.insert_one(chat_message)
+    try:
+        chat_message = {
+            "sender": sender,
+            "text": text,
+            "timestamp": datetime.utcnow()
+        }
+        print(f"Saving chat message from {sender} to MongoDB...")
+        await chat_collection.insert_one(chat_message)
+        print(f"Chat message from {sender} saved successfully.")
+    except Exception as e:
+        print(f"Error saving chat message: {str(e)}")
+        raise e
 
 @app.post("/generate-content/")
 async def generate_content(request: PromptRequest):
     try:
-        # Use your fine-tuned model instead of the base model
-        fine_tuned_model_id = "tunedModels/school-model-7461"
+        print("Received prompt:", request.prompt)  # Log the prompt received
         
-        # Initialize the fine-tuned model
+        fine_tuned_model_id = "tunedModels/school-model-7461"
         model = genai.GenerativeModel(model_name=fine_tuned_model_id)
         
-        # Generate content using the prompt provided in the request
+        print("Generating content...")  # Log before the generation call
         response = model.generate_content(request.prompt)
+        print("Content generated:", response.text)  # Log after generation
         
-        # Save user prompt and AI-generated response in MongoDB as a single document
         chat_message = {
             "messages": [
                 {"sender": "user", "text": request.prompt},
@@ -75,23 +80,25 @@ async def generate_content(request: PromptRequest):
             ],
             "timestamp": datetime.utcnow()
         }
-        await chat_collection.insert_one(chat_message)
         
-        # Return the AI-generated content as JSON
+        print("Saving to MongoDB...")  # Log before DB operation
+        await chat_collection.insert_one(chat_message)
+        print("Saved successfully!")  # Log after successful save
+        
         return {"generated_text": response.text}
     
     except Exception as e:
-        # Return an HTTP 500 error if something goes wrong
+        print("Error occurred:", str(e))  # Log the error
         raise HTTPException(status_code=500, detail=str(e))
 
 # New endpoint to get chat history from MongoDB
 @app.get("/chat-history/")
 async def get_chat_history():
     try:
-        # Fetch last 100 chat messages from MongoDB
+        print("Fetching chat history from MongoDB...")  # Log fetching history
         chat_history = await chat_collection.find().to_list(100)
+        print(f"Fetched {len(chat_history)} chat messages.")  # Log count
         
-        # Convert BSON documents to dictionaries
         chat_history = [
             {
                 "_id": str(msg["_id"]),  # Convert ObjectId to string
@@ -101,13 +108,13 @@ async def get_chat_history():
             for msg in chat_history
         ]
         
-        print("Fetched chat history:", chat_history)  # Debugging
         return chat_history
     except Exception as e:
-        print("Error fetching chat history:", str(e))  # Log the error for debugging
+        print("Error fetching chat history:", str(e))  # Log the error
         raise HTTPException(status_code=500, detail=f"Error fetching chat history: {str(e)}")
 
 # Root endpoint to verify server is running
 @app.get("/")
 def read_root():
     return {"message": "Gemini API FastAPI server is running"}
+
