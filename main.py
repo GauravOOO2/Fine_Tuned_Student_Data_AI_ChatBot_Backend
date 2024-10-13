@@ -15,7 +15,8 @@ app = FastAPI()
 
 # Configure CORS
 origins = [
-    "http://localhost:3000",  # Allow your frontend's URL
+    "http://localhost:3000",  # Allow your frontend's URL for local development
+    "https://fine-tuned-student-data-ai-chatbot.onrender.com",  # Allow your deployed frontend URL
 ]
 
 app.add_middleware(
