@@ -17,6 +17,9 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",  # Allow your frontend's URL for local development
     "https://fine-tuned-student-data-ai-chatbot.onrender.com",  # Allow your deployed frontend URL
+    "https://fine-tuned-student-data-ai-chatbot.onrender.com/generate-content/",
+    "https://fine-tuned-student-data-ai-chatbot.onrender.com/chat-history/"
+
 ]
 
 app.add_middleware(
