@@ -73,7 +73,7 @@ Ensure you have the following installed:
 
 1. **Navigate to the frontend folder:**
 
-```bash
+   ```bash
    git clone https://github.com/GauravOOO2/Fine_Tuned_Student_Data_AI_ChatBot_FrontEnd.git
 
    ```
