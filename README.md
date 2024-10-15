@@ -46,10 +46,7 @@ Ensure you have the following installed:
    cd Fine_Tuned_Student_Data_AI_ChatBot_Backend
    ```
 
-   ```bash
-   git clone https://github.com/GauravOOO2/Fine_Tuned_Student_Data_AI_ChatBot_FrontEnd.git
-   cd Fine_Tuned_Student_Data_AI_ChatBot_FrontEnd
-   ```
+   
 
 2. **Install dependencies:**
 
@@ -76,8 +73,13 @@ Ensure you have the following installed:
 
 1. **Navigate to the frontend folder:**
 
+```bash
+   git clone https://github.com/GauravOOO2/Fine_Tuned_Student_Data_AI_ChatBot_FrontEnd.git
+
+   ```
+
    ```bash
-   cd ../frontend
+      cd Fine_Tuned_Student_Data_AI_ChatBot_FrontEnd
    ```
 
 2. **Install dependencies:**
